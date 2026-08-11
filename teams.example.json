@@ -1,0 +1,9 @@
+{
+  "teams": {
+    "t1": { "name": "Red Dragons",   "passcode": "1111" },
+    "t2": { "name": "Blue Sharks",   "passcode": "2222" },
+    "t3": { "name": "Green Vipers",  "passcode": "3333" },
+    "t4": { "name": "Yellow Hawks",  "passcode": "4444" }
+  },
+  "owner": { "passcode": "9999" }
+}

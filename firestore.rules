@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Team names + passcodes: readable by the app, not writable from phones
+    match /teams/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Owner passcode (optional): config/owner { passcode: "...." }
+    match /config/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Live game state per team (timer + cut progress): open for the event
+    match /games/{doc} {
+      allow read, write: if true;
+    }
+
+    // Tiny helper doc used to sync the countdown clock
+    match /_clock/{doc} {
+      allow read, write: if true;
+    }
+  }
+}

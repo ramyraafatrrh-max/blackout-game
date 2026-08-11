@@ -1,0 +1,7 @@
+{
+  "rules": {
+    "teams": { ".read": true, ".write": false },
+    "owner": { ".read": true, ".write": false },
+    "games": { ".read": true, ".write": true }
+  }
+}

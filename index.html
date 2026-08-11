@@ -6,43 +6,26 @@
 <meta name="theme-color" content="#0a0000" />
 <title>OPERATION: BLACKOUT</title>
 
-<!-- QR code library (used only on the organizer / home screen) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
-/* ============================================================
-   OPERATION: BLACKOUT  —  horror / tragedy bomb-defusal theme
-   ============================================================ */
 :root{
-  --red:#ff2233;
-  --red-deep:#8b0000;
-  --amber:#ff8c1a;
-  --ink:#05070a;
-  --smoke:#12161c;
-  --ok:#39ff14;
+  --red:#ff2233;--red-deep:#8b0000;--amber:#ff8c1a;--ink:#05070a;--smoke:#12161c;--ok:#39ff14;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{margin:0;height:100%;}
 body{
-  background:
-    radial-gradient(120% 80% at 50% -10%, #1a0d0d 0%, #0a0608 45%, #030203 100%);
-  color:#e9e2d8;
-  font-family:"Courier New",ui-monospace,Menlo,Consolas,monospace;
-  overflow:hidden;
-  -webkit-user-select:none;user-select:none;
-  min-height:100dvh;
+  background:radial-gradient(120% 80% at 50% -10%, #1a0d0d 0%, #0a0608 45%, #030203 100%);
+  color:#e9e2d8;font-family:"Courier New",ui-monospace,Menlo,Consolas,monospace;
+  overflow:hidden;-webkit-user-select:none;user-select:none;min-height:100dvh;
 }
-/* CRT scanlines + vignette */
 body::after{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;
-  background:
-    repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.28) 3px 4px),
+  background:repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.28) 3px 4px),
     radial-gradient(120% 120% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.85) 100%);
   mix-blend-mode:multiply;opacity:.8;
 }
 #app{position:fixed;inset:0;display:flex;flex-direction:column;}
-
-/* ---------- shared ---------- */
 .center{display:flex;align-items:center;justify-content:center;text-align:center;}
 .hidden{display:none !important;}
 .mono{font-variant-numeric:tabular-nums;letter-spacing:2px;}
@@ -54,197 +37,159 @@ body::after{
 @keyframes fusewiggle{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
 @keyframes spark{0%,100%{opacity:.4;transform:scale(.7)}50%{opacity:1;transform:scale(1.3)}}
 @keyframes creep{0%{transform:translateY(0)}100%{transform:translateY(-2px)}}
+.shakeit{animation:shake .5s;}
 
-/* =========================================================
-   MAIN PHONE  (door + bomb + timer)
-   ========================================================= */
-.scene{
-  position:relative;flex:1;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
-}
-/* dungeon brick backdrop */
-.scene .bricks{
-  position:absolute;inset:0;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.2), rgba(0,0,0,.75)),
+/* ===== MAIN PHONE ===== */
+.scene{position:relative;flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.scene .bricks{position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(0,0,0,.2), rgba(0,0,0,.75)),
     repeating-linear-gradient(90deg,#1a1512 0 62px,#0f0b09 62px 66px),
     repeating-linear-gradient(0deg,#181310 0 30px,#0d0a08 30px 34px);
-  filter:brightness(.7) contrast(1.1);
-}
-/* iron door */
-.door{
-  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  filter:brightness(.7) contrast(1.1);}
+.door{position:absolute;bottom:0;left:50%;transform:translateX(-50%);
   width:min(72vw,320px);height:min(88vh,560px);
-  background:linear-gradient(180deg,#2a2622,#141210);
-  border:6px solid #0a0908;border-bottom:none;
-  border-radius:160px 160px 8px 8px;
-  box-shadow:inset 0 0 60px rgba(0,0,0,.9), 0 0 40px rgba(0,0,0,.8);
-}
-.door::before{ /* rivets / panel */
-  content:"";position:absolute;inset:14px;border:3px solid rgba(0,0,0,.6);
-  border-radius:150px 150px 4px 4px;
-  background:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 2px,transparent 2px 26px);
-}
-.door .window{
-  position:absolute;top:46px;left:50%;transform:translateX(-50%);
-  width:74px;height:74px;border-radius:50%;
-  background:radial-gradient(circle,#3a0000,#000);
-  border:5px solid #0a0908;
-  box-shadow:inset 0 0 18px #ff0000;
-  background-image:repeating-linear-gradient(90deg,#0a0908 0 4px,transparent 4px 14px);
-}
-/* the bomb, in front of the door */
+  background:linear-gradient(180deg,#2a2622,#141210);border:6px solid #0a0908;border-bottom:none;
+  border-radius:160px 160px 8px 8px;box-shadow:inset 0 0 60px rgba(0,0,0,.9), 0 0 40px rgba(0,0,0,.8);}
+.door::before{content:"";position:absolute;inset:14px;border:3px solid rgba(0,0,0,.6);
+  border-radius:150px 150px 4px 4px;background:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 2px,transparent 2px 26px);}
+.door .window{position:absolute;top:46px;left:50%;transform:translateX(-50%);width:74px;height:74px;border-radius:50%;
+  background:radial-gradient(circle,#3a0000,#000);border:5px solid #0a0908;box-shadow:inset 0 0 18px #ff0000;
+  background-image:repeating-linear-gradient(90deg,#0a0908 0 4px,transparent 4px 14px);}
 .bomb-wrap{position:relative;z-index:3;transform:translateY(6vh);}
-.bomb{
-  position:relative;width:min(58vw,230px);
-  background:linear-gradient(180deg,#3a0d0d,#7a1414);
+.bomb{position:relative;width:min(58vw,230px);background:linear-gradient(180deg,#3a0d0d,#7a1414);
   border:4px solid #1a0505;border-radius:16px;padding:14px 12px 12px;
-  box-shadow:0 10px 30px rgba(0,0,0,.7), inset 0 0 26px rgba(0,0,0,.6);
-}
+  box-shadow:0 10px 30px rgba(0,0,0,.7), inset 0 0 26px rgba(0,0,0,.6);}
 .bomb .sticks{display:flex;gap:6px;justify-content:center;margin-bottom:10px;}
-.bomb .stick{width:22px;height:70px;border-radius:6px;
-  background:linear-gradient(180deg,#c62828,#7a1414);border:2px solid #300;}
-.bomb .led{position:absolute;top:8px;right:10px;width:12px;height:12px;border-radius:50%;
-  background:var(--red);box-shadow:0 0 12px var(--red);animation:pulse 1s infinite;}
+.bomb .stick{width:22px;height:70px;border-radius:6px;background:linear-gradient(180deg,#c62828,#7a1414);border:2px solid #300;}
+.bomb .led{position:absolute;top:8px;right:10px;width:12px;height:12px;border-radius:50%;background:var(--red);box-shadow:0 0 12px var(--red);animation:pulse 1s infinite;}
 .bomb .wires{position:absolute;top:-26px;left:0;right:0;display:flex;justify-content:space-around;padding:0 22px;}
 .bomb .w{width:6px;height:30px;border-radius:4px 4px 0 0;transform-origin:bottom;animation:creep 2.4s ease-in-out infinite alternate;}
-.timer-display{
-  font-family:"Courier New",monospace;font-weight:bold;
-  background:#0a0f06;color:#39ff14;border:3px solid #000;border-radius:8px;
-  padding:8px 6px;text-align:center;font-size:34px;letter-spacing:4px;
-  text-shadow:0 0 10px #39ff14;box-shadow:inset 0 0 16px rgba(57,255,20,.35);
-}
+.timer-display{font-family:"Courier New",monospace;font-weight:bold;background:#0a0f06;color:#39ff14;
+  border:3px solid #000;border-radius:8px;padding:8px 6px;text-align:center;font-size:34px;letter-spacing:4px;
+  text-shadow:0 0 10px #39ff14;box-shadow:inset 0 0 16px rgba(57,255,20,.35);}
 .timer-display.warn{color:#ffcc00;text-shadow:0 0 10px #ffcc00;}
 .timer-display.crit{color:#ff2233;text-shadow:0 0 14px #ff2233;animation:pulse .5s infinite;}
 .fuse{position:absolute;top:-52px;left:50%;transform:translateX(-50%);width:60px;height:34px;}
 .fuse .cord{position:absolute;left:0;bottom:0;width:100%;height:100%;border-top:4px dotted #6b4b2a;border-radius:60% 60% 0 0;animation:fusewiggle 1.6s ease-in-out infinite;}
 .fuse .spark{position:absolute;right:-6px;top:-6px;width:16px;height:16px;border-radius:50%;
   background:radial-gradient(circle,#fff,#ffcc00 40%,#ff5500 70%,transparent 75%);animation:spark .3s infinite;}
-
-.hud-top{position:absolute;top:0;left:0;right:0;z-index:5;padding:14px 12px;
-  display:flex;align-items:center;justify-content:space-between;}
-.badge{font-size:11px;letter-spacing:3px;color:#ff6b6b;border:1px solid #5a1111;
-  padding:5px 9px;border-radius:4px;background:rgba(20,0,0,.5);text-transform:uppercase;}
-.big-clock{position:absolute;top:52px;left:50%;transform:translateX(-50%);z-index:5;
-  font-size:52px;font-weight:bold;color:#ff2233;letter-spacing:6px;
-  text-shadow:0 0 18px rgba(255,34,51,.8);}
+.hud-top{position:absolute;top:0;left:0;right:0;z-index:5;padding:14px 12px;display:flex;align-items:center;justify-content:space-between;}
+.badge{font-size:11px;letter-spacing:3px;color:#ff6b6b;border:1px solid #5a1111;padding:5px 9px;border-radius:4px;background:rgba(20,0,0,.5);text-transform:uppercase;}
+.big-clock{position:absolute;top:52px;left:50%;transform:translateX(-50%);z-index:5;font-size:52px;font-weight:bold;color:#ff2233;letter-spacing:6px;text-shadow:0 0 18px rgba(255,34,51,.8);}
 .big-clock.safe{color:#39ff14;text-shadow:0 0 18px rgba(57,255,20,.7);}
 .big-clock.warn{color:#ffcc00;text-shadow:0 0 18px rgba(255,204,0,.8);}
-
 .tabbar{position:absolute;bottom:0;left:0;right:0;z-index:6;display:flex;gap:8px;padding:12px;}
 .tab{flex:1;text-align:center;padding:13px 10px;border-radius:10px;font-size:14px;letter-spacing:2px;
-  background:linear-gradient(180deg,#241010,#140808);border:1px solid #5a1a1a;color:#ffd7d0;
-  text-transform:uppercase;font-weight:bold;box-shadow:0 4px 0 #0a0404;}
+  background:linear-gradient(180deg,#241010,#140808);border:1px solid #5a1a1a;color:#ffd7d0;text-transform:uppercase;font-weight:bold;box-shadow:0 4px 0 #0a0404;}
 .tab:active{transform:translateY(2px);box-shadow:0 2px 0 #0a0404;}
-
-/* transparent instructions overlay – bomb stays visible behind */
-.instr{position:absolute;inset:0;z-index:20;display:none;
-  padding:18px 16px 90px;overflow:auto;
-  background:linear-gradient(180deg,rgba(8,0,0,.28),rgba(8,0,0,.42));
-  backdrop-filter:blur(1px);}
+.instr{position:absolute;inset:0;z-index:20;display:none;padding:18px 16px 90px;overflow:auto;
+  background:linear-gradient(180deg,rgba(8,0,0,.28),rgba(8,0,0,.42));backdrop-filter:blur(1px);}
 .instr.open{display:block;}
-.instr h2{color:#ff3344;font-size:19px;letter-spacing:2px;margin:.2em 0 .5em;
-  text-shadow:0 0 10px #000,0 2px 4px #000;}
+.instr h2{color:#ff3344;font-size:19px;letter-spacing:2px;margin:.2em 0 .5em;text-shadow:0 0 10px #000,0 2px 4px #000;}
 .instr h3{color:#ffb020;font-size:15px;letter-spacing:2px;margin:1em 0 .3em;text-shadow:0 0 8px #000,0 2px 3px #000;}
 .instr p,.instr li{font-size:14px;line-height:1.5;text-shadow:0 0 6px #000,0 1px 3px #000,0 0 2px #000;}
 .instr b{color:#fff;}
 .instr .wl-white b{color:#f5f5f5}.instr .wl-blue b{color:#5b8bff}.instr .wl-green b{color:#4be37a}
 .instr .wl-yellow b{color:#ffd21c}.instr .wl-red b{color:#ff5a5a}
-.instr .closebtn{position:sticky;top:0;float:right;margin-bottom:6px;
-  background:#3a0d0d;border:1px solid #7a1a1a;color:#fff;border-radius:6px;padding:6px 12px;font-weight:bold;}
+.instr .closebtn{position:sticky;top:0;float:right;margin-bottom:6px;background:#3a0d0d;border:1px solid #7a1a1a;color:#fff;border-radius:6px;padding:6px 12px;font-weight:bold;}
 .instr ol,.instr ul{padding-left:22px;}
-
-.resetbtn{position:absolute;top:12px;left:12px;z-index:30;width:34px;height:34px;border-radius:50%;
-  background:rgba(0,0,0,.4);border:1px solid #3a1010;color:#8a4b4b;font-size:16px;opacity:.55;}
-
-/* explosion */
 .flash{position:absolute;inset:0;z-index:40;background:#fff;opacity:0;pointer-events:none;}
 .flash.go{animation:boomflash 1.1s ease-out forwards;}
 @keyframes boomflash{0%{opacity:0}6%{opacity:1;background:#fff}18%{opacity:.9;background:#ffd27a}40%{opacity:.7;background:#ff6a00}100%{opacity:0;background:#000}}
-.shakeit{animation:shake .5s;}
-.aftermath{position:absolute;inset:0;z-index:45;display:none;flex-direction:column;
-  align-items:center;justify-content:center;text-align:center;padding:24px;
+.aftermath{position:absolute;inset:0;z-index:45;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;
   background:radial-gradient(120% 120% at 50% 40%,#1a0000,#050101 70%);}
 .aftermath.show{display:flex;}
 .aftermath .boom{font-size:76px;filter:drop-shadow(0 0 20px #ff5500);animation:pulse 1.6s infinite;}
-.aftermath h1{color:#ff2233;font-size:34px;letter-spacing:6px;margin:10px 0 4px;animation:flicker 3s infinite;
-  text-shadow:0 0 22px rgba(255,34,51,.9);}
+.aftermath h1{color:#ff2233;font-size:34px;letter-spacing:6px;margin:10px 0 4px;animation:flicker 3s infinite;text-shadow:0 0 22px rgba(255,34,51,.9);}
 .aftermath .sub{color:#d9cfc4;font-size:15px;line-height:1.6;max-width:340px;letter-spacing:1px;}
 .aftermath .sub b{color:#ffcf5a;}
 
-/* =========================================================
-   WIRE PHONES
-   ========================================================= */
-.wire-screen{position:relative;flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;padding:24px;text-align:center;}
+/* ===== WIRE PHONES ===== */
+.wire-screen{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;}
 .wire-top{position:absolute;top:16px;left:0;right:0;display:flex;justify-content:space-between;padding:0 16px;}
 .standby{color:#7a7a7a;letter-spacing:4px;font-size:16px;animation:pulse 1.6s infinite;}
 .standby small{display:block;margin-top:10px;font-size:11px;opacity:.7;letter-spacing:2px;}
-
 .wire-name{font-size:13px;letter-spacing:5px;color:#9a9a9a;margin-bottom:6px;text-transform:uppercase;}
 .wire-visual{position:relative;width:min(86vw,360px);height:120px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
 .cable{position:relative;width:100%;height:26px;border-radius:14px;
   background:linear-gradient(180deg,color-mix(in srgb,var(--c) 88%,#fff),var(--c),color-mix(in srgb,var(--c) 70%,#000));
   box-shadow:0 0 18px color-mix(in srgb,var(--c) 60%,transparent), inset 0 -4px 6px rgba(0,0,0,.5);}
-.cable::before,.cable::after{content:"";position:absolute;top:50%;transform:translateY(-50%);
-  width:26px;height:40px;background:#1a1a1a;border:2px solid #000;border-radius:6px;}
+.cable::before,.cable::after{content:"";position:absolute;top:50%;transform:translateY(-50%);width:26px;height:40px;background:#1a1a1a;border:2px solid #000;border-radius:6px;}
 .cable::before{left:-14px;}.cable::after{right:-14px;}
 .wire-visual .grip{position:absolute;bottom:-2px;font-size:26px;opacity:.85;animation:pulse 1.4s infinite;}
 .wire-hint{margin-top:16px;font-size:13px;letter-spacing:3px;color:#c9b7a5;}
 .wire-hint b{color:#ff5a5a;}
-
-/* lockout warning */
-.lock{position:absolute;inset:0;z-index:20;display:none;flex-direction:column;
-  align-items:center;justify-content:center;background:rgba(30,0,0,.92);}
+.lock{position:absolute;inset:0;z-index:20;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(30,0,0,.92);}
 .lock.show{display:flex;animation:flicker 2s infinite;}
-.tri{width:0;height:0;border-left:64px solid transparent;border-right:64px solid transparent;
-  border-bottom:112px solid #ffcc00;filter:drop-shadow(0 0 14px rgba(255,0,0,.8));position:relative;}
+.tri{width:0;height:0;border-left:64px solid transparent;border-right:64px solid transparent;border-bottom:112px solid #ffcc00;filter:drop-shadow(0 0 14px rgba(255,0,0,.8));position:relative;}
 .tri span{position:absolute;left:50%;top:44px;transform:translateX(-50%);color:#7a0000;font-size:64px;font-weight:900;}
 .lock h2{color:#ff2233;letter-spacing:3px;margin:18px 0 4px;font-size:20px;}
 .lock .cd{font-size:56px;color:#fff;font-weight:bold;text-shadow:0 0 16px #ff0000;}
 .lock small{color:#ffb3b3;letter-spacing:2px;margin-top:8px;}
-
-/* try-again toast */
 .toast{position:absolute;top:22%;left:50%;transform:translateX(-50%) scale(.8);z-index:25;
-  background:rgba(10,0,0,.85);border:2px solid #7a1a1a;border-radius:12px;padding:14px 26px;
-  color:#ff6b6b;font-size:22px;letter-spacing:4px;font-weight:bold;opacity:0;pointer-events:none;text-shadow:0 0 10px #ff0000;}
+  background:rgba(10,0,0,.85);border:2px solid #7a1a1a;border-radius:12px;padding:14px 26px;color:#ff6b6b;font-size:22px;letter-spacing:4px;font-weight:bold;opacity:0;pointer-events:none;text-shadow:0 0 10px #ff0000;}
 .toast.show{animation:toastpop 1.4s ease-out;}
 @keyframes toastpop{0%{opacity:0;transform:translateX(-50%) scale(.7)}15%{opacity:1;transform:translateX(-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translateX(-50%) scale(1)}}
-
-/* number reveal – tragedy */
-.numscreen{position:absolute;inset:0;z-index:30;display:none;flex-direction:column;
-  align-items:center;justify-content:center;text-align:center;
+.numscreen{position:absolute;inset:0;z-index:30;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;
   background:radial-gradient(120% 120% at 50% 40%,#160000,#040101 72%);}
 .numscreen.show{display:flex;}
 .numscreen .lbl{color:#7a1616;letter-spacing:6px;font-size:13px;margin-bottom:6px;animation:flicker 2.4s infinite;}
-.numscreen .digit{font-size:44vw;line-height:1;font-weight:900;color:#c9c2b8;
-  text-shadow:0 0 4px #000,4px 0 #ff0033,-4px 0 #00b3ff;animation:glitch 1.6s steps(2) infinite,flicker 5s infinite;}
+.numscreen .digit{font-size:44vw;line-height:1;font-weight:900;color:#c9c2b8;text-shadow:0 0 4px #000,4px 0 #ff0033,-4px 0 #00b3ff;animation:glitch 1.6s steps(2) infinite,flicker 5s infinite;}
 @keyframes glitch{0%{transform:translate(0,0)}20%{transform:translate(-3px,1px)}40%{transform:translate(3px,-2px)}60%{transform:translate(-2px,0)}80%{transform:translate(2px,2px)}100%{transform:translate(0,0)}}
 .numscreen .foot{margin-top:14px;color:#8a7f74;font-size:12px;letter-spacing:4px;animation:pulse 2s infinite;}
-.numscreen .ash{position:absolute;inset:0;pointer-events:none;opacity:.15;
-  background:repeating-linear-gradient(115deg,transparent 0 6px,#000 6px 7px);}
+.numscreen .ash{position:absolute;inset:0;pointer-events:none;opacity:.15;background:repeating-linear-gradient(115deg,transparent 0 6px,#000 6px 7px);}
 
-/* =========================================================
-   HOME / ORGANIZER SCREEN
-   ========================================================= */
-.home{flex:1;overflow:auto;padding:20px 16px 60px;}
-.home h1{color:#ff2233;letter-spacing:4px;font-size:26px;margin:6px 0 2px;text-shadow:0 0 16px rgba(255,34,51,.6);}
-.home .lead{color:#c9b7a5;font-size:13px;letter-spacing:1px;line-height:1.5;margin-bottom:14px;}
-.warnbox{background:#2a1400;border:1px solid #7a4a10;color:#ffcf8a;padding:12px;border-radius:10px;
-  font-size:13px;line-height:1.5;margin-bottom:16px;}
-.teamcard{background:linear-gradient(180deg,#160c0c,#0c0808);border:1px solid #3a1a1a;border-radius:14px;
-  padding:14px;margin-bottom:16px;}
-.teamcard h2{margin:0 0 10px;color:#ffb020;font-size:17px;letter-spacing:3px;}
-.linkrow{display:flex;align-items:center;gap:12px;padding:10px 6px;border-bottom:1px dashed #2a1616;}
+/* ===== LAUNCH / TEAM SELECT ===== */
+.launch{flex:1;overflow:auto;padding:26px 18px 50px;display:flex;flex-direction:column;}
+.launch h1{color:#ff2233;letter-spacing:4px;font-size:24px;margin:6px 0 2px;text-align:center;text-shadow:0 0 16px rgba(255,34,51,.6);}
+.launch .lead{color:#c9b7a5;font-size:13px;letter-spacing:1px;line-height:1.5;text-align:center;margin-bottom:8px;}
+.teamgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px;}
+.teambtn{position:relative;padding:24px 12px;border-radius:16px;border:1px solid #5a1a1a;
+  background:linear-gradient(180deg,#1e0d0d,#120808);color:#ffd7d0;font-weight:bold;letter-spacing:1px;font-size:15px;
+  text-transform:uppercase;box-shadow:0 6px 0 #0a0404;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
+.teambtn:active{transform:translateY(3px);box-shadow:0 3px 0 #0a0404;}
+.teambtn .ico{font-size:30px;filter:drop-shadow(0 0 8px rgba(255,60,60,.6));}
+.launch .foot{color:#6a6a6a;font-size:11px;letter-spacing:2px;text-align:center;margin-top:auto;padding-top:18px;}
+
+/* passcode overlay */
+.passwrap{position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:rgba(3,1,1,.86);backdrop-filter:blur(3px);}
+.passcard{width:100%;max-width:340px;background:linear-gradient(180deg,#1a0d0d,#0e0808);border:1px solid #5a1a1a;border-radius:18px;padding:24px 20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.7);}
+.passtitle{color:#ffb020;font-size:19px;letter-spacing:3px;text-transform:uppercase;font-weight:bold;}
+.passsub{color:#c9b7a5;font-size:13px;letter-spacing:2px;margin:6px 0 16px;}
+.passin{width:100%;background:#0a0606;border:2px solid #5a1a1a;border-radius:10px;color:#fff;text-align:center;
+  font-size:28px;letter-spacing:10px;padding:12px;font-family:inherit;outline:none;}
+.passin:focus{border-color:#ff3344;box-shadow:0 0 14px rgba(255,51,68,.5);}
+.passerr{color:#ff5a5a;font-size:13px;letter-spacing:1px;min-height:18px;margin-top:10px;}
+.passbtns{display:flex;gap:10px;margin-top:12px;}
+.passbtn{flex:1;padding:13px;border-radius:10px;font-weight:bold;letter-spacing:2px;font-size:14px;border:1px solid #5a1a1a;text-transform:uppercase;}
+.passbtn.go{background:linear-gradient(180deg,#7a1414,#4a0d0d);color:#fff;}
+.passbtn.ghost{background:transparent;color:#c9b7a5;}
+.passbtn:active{transform:translateY(1px);}
+
+/* ===== TEAM CONSOLE (links + QR) ===== */
+.home{flex:1;overflow:auto;padding:18px 16px 50px;}
+.home .backbtn{background:#241010;border:1px solid #5a1a1a;color:#ffd7d0;border-radius:8px;padding:8px 14px;font-size:13px;letter-spacing:2px;margin-bottom:12px;}
+.home h1{color:#ffb020;letter-spacing:3px;font-size:22px;margin:2px 0;text-shadow:0 0 14px rgba(255,176,32,.4);}
+.home .lead{color:#c9b7a5;font-size:13px;letter-spacing:1px;line-height:1.5;margin:6px 0 14px;}
+.warnbox{background:#2a1400;border:1px solid #7a4a10;color:#ffcf8a;padding:12px;border-radius:10px;font-size:13px;line-height:1.5;margin-bottom:16px;}
+.linkrow{display:flex;align-items:center;gap:12px;padding:12px 6px;border-bottom:1px dashed #2a1616;}
 .linkrow:last-child{border-bottom:none;}
-.qr{width:76px;height:76px;background:#fff;border-radius:6px;padding:4px;flex:0 0 auto;}
+.qr{width:80px;height:80px;background:#fff;border-radius:6px;padding:4px;flex:0 0 auto;}
 .linkmeta{flex:1;min-width:0;}
 .linkmeta .role{font-weight:bold;letter-spacing:2px;font-size:14px;}
 .linkmeta .role .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:middle;box-shadow:0 0 8px currentColor;}
 .linkmeta a{display:block;color:#7fb2ff;font-size:11px;word-break:break-all;margin-top:3px;text-decoration:none;}
-.copybtn{background:#241010;border:1px solid #5a1a1a;color:#ffd7d0;border-radius:8px;padding:8px 10px;font-size:12px;flex:0 0 auto;}
+.copybtn{background:#241010;border:1px solid #5a1a1a;color:#ffd7d0;border-radius:8px;padding:9px 12px;font-size:12px;flex:0 0 auto;letter-spacing:1px;}
 .copybtn:active{transform:translateY(1px);}
-.home .foot{color:#6a6a6a;font-size:11px;letter-spacing:2px;text-align:center;margin-top:8px;}
+.home .foot{color:#6a6a6a;font-size:11px;letter-spacing:2px;text-align:center;margin-top:12px;}
+
+/* ===== OWNER ===== */
+.ownrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 10px;border-bottom:1px dashed #2a1616;}
+.ownname{font-weight:bold;letter-spacing:2px;font-size:15px;color:#ffd7d0;}
+.dangerbtn{width:100%;margin-top:20px;padding:16px;border-radius:12px;border:1px solid #7a1a1a;
+  background:linear-gradient(180deg,#a11414,#5a0d0d);color:#fff;font-weight:bold;letter-spacing:2px;font-size:15px;text-transform:uppercase;box-shadow:0 5px 0 #300;}
+.dangerbtn:active{transform:translateY(2px);box-shadow:0 3px 0 #300;}
 </style>
 </head>
 <body>
@@ -252,54 +197,84 @@ body::after{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getDatabase, ref, onValue, get, set, remove, runTransaction }
-  from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import {
+  getFirestore, doc, collection, getDoc, getDocs, setDoc, deleteDoc,
+  onSnapshot, runTransaction, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 /* ============================================================
-   1)  >>> PASTE YOUR FIREBASE CONFIG HERE <<<
-   Firebase Console → Project settings → "Your apps" → Web app → SDK config.
-   The databaseURL line is REQUIRED for the Realtime Database.
+   1)  >>> PASTE YOUR "Hostage Game" FIREBASE CONFIG HERE <<<
+   Firebase Console → Project settings → Your apps → Web → SDK config.
+   (This is the FIRESTORE version — no Realtime Database needed.)
    ============================================================ */
 const firebaseConfig = {
-  apiKey: "AIzaSyBkbDb1K2QNWCT3ozxxDrJJEU434tEN5sI",
-  authDomain: "balckout-game.firebaseapp.com",
-  databaseURL: "hhttps://balckout-game-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "balckout-game",
-  storageBucket: "balckout-game.firebasestorage.app",
-  messagingSenderId: "585201078034",
-  appId: "1:585201078034:web:005ba601623e6be6a6edcb"
+  apiKey: "AIzaSyAIZuezO47a8PcSkbhdqQRF9LfJnsP-SVg",
+  authDomain: "hostage-game-dda89.firebaseapp.com",
+  databaseURL: "https://hostage-game-dda89-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "hostage-game-dda89",
+  storageBucket: "hostage-game-dda89.firebasestorage.app",
+  messagingSenderId: "968050038111",
+  appId: "1:968050038111:web:f666ec6810cbc189fe52ea",
 };
+/* ============================================================
+   2)  Optional: if your teams live in a Firestore collection with a
+       different name than "teams", change it here:
+   ============================================================ */
+const TEAMS_COLLECTION = "teams";     // <- your Firestore collection of teams
+const GAMES_COLLECTION = "games";     // <- created automatically for live game state
 /* ============================================================ */
 
 const CONFIG_OK = firebaseConfig.apiKey && !String(firebaseConfig.apiKey).includes("PASTE");
 let db = null, serverOffset = 0;
 if (CONFIG_OK) {
   const fbApp = initializeApp(firebaseConfig);
-  db = getDatabase(fbApp);
-  onValue(ref(db, ".info/serverTimeOffset"), s => { serverOffset = s.val() || 0; });
+  db = getFirestore(fbApp);
+  syncClock();               // estimate server-time offset for a shared countdown
 }
 
 /* ---------- constants ---------- */
 const ORDER   = ["white","blue","green","yellow","red"];
 const NUMBERS = { white:5, blue:6, green:1, yellow:3, red:9 };
 const HEX     = { white:"#f2f2f2", blue:"#2f6bff", green:"#25d05b", yellow:"#ffd21c", red:"#ff2d2d" };
-const params  = new URLSearchParams(location.search);
-const role    = (params.get("role") || "").toLowerCase();
-const team    = params.get("team") || "1";
-const MINS    = parseFloat(params.get("mins") || "5");      // for testing use e.g. mins=0.3
-const GAME_MS = Math.max(5, MINS * 60 * 1000);
-const gamePath = `games/team${team}`;
+const ROLES   = [
+  {r:"main",   label:"MAIN PHONE (bomb + timer)", color:"#ff8c1a"},
+  {r:"white",  label:"WIRE — WHITE",  color:HEX.white},
+  {r:"blue",   label:"WIRE — BLUE",   color:HEX.blue},
+  {r:"green",  label:"WIRE — GREEN",  color:HEX.green},
+  {r:"yellow", label:"WIRE — YELLOW", color:HEX.yellow},
+  {r:"red",    label:"WIRE — RED",    color:HEX.red},
+];
+const params = new URLSearchParams(location.search);
+const role   = (params.get("role") || "").toLowerCase();
+const team   = params.get("team") || "";                 // Firestore team doc id
+const MINS   = parseFloat(params.get("mins") || "5");
+const GAME_MS= Math.max(5, MINS * 60 * 1000);
 const now = () => Date.now() + serverOffset;
 const app = document.getElementById("app");
+const gameRef = (key) => doc(db, GAMES_COLLECTION, String(key));
 
-/* ---------- tiny WebAudio (optional, enabled after 1st touch) ---------- */
-let actx = null;
-function audioInit(){ if(actx) return; try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+/* ---------- server clock sync (Firestore has no built-in offset) ---------- */
+async function syncClock(){
+  try{
+    const r = doc(collection(db, "_clock"));
+    const t0 = Date.now();
+    await setDoc(r, { t: serverTimestamp() });
+    const snap = await getDoc(r);
+    const t1 = Date.now();
+    const st = snap.data() && snap.data().t;
+    if (st && st.toMillis){ serverOffset = st.toMillis() - Math.round((t0 + t1) / 2); }
+    deleteDoc(r).catch(()=>{});
+  }catch(e){ /* offline / rules — fall back to local clock */ }
+}
+
+/* ---------- audio ---------- */
+let actx=null;
+function audioInit(){ if(actx) return; try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
 addEventListener("touchstart", audioInit, {once:true});
 addEventListener("click", audioInit, {once:true});
 function beep(freq,dur=0.05,type="square",vol=0.05){ if(!actx) return; try{
-  const o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.value=freq;
-  g.gain.value=vol;o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+dur);}catch(e){}}
+  const o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.value=freq;g.gain.value=vol;
+  o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+dur);}catch(e){}}
 function boom(){ if(!actx) return; try{
   const o=actx.createOscillator(),g=actx.createGain();o.type="sawtooth";
   o.frequency.setValueAtTime(140,actx.currentTime);o.frequency.exponentialRampToValueAtTime(18,actx.currentTime+0.9);
@@ -311,43 +286,71 @@ function boom(){ if(!actx) return; try{
   s.connect(ng);ng.connect(actx.destination);s.start();}catch(e){}}
 
 /* ---------- helpers ---------- */
-function fmt(ms){ ms=Math.max(0,ms); const t=Math.ceil(ms/1000); const m=String(Math.floor(t/60)).padStart(2,"0"); const s=String(t%60).padStart(2,"0"); return m+":"+s; }
+function fmt(ms){ ms=Math.max(0,ms);const t=Math.ceil(ms/1000);const m=String(Math.floor(t/60)).padStart(2,"0");const s=String(t%60).padStart(2,"0");return m+":"+s; }
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function startMillis(g){
+  if(!g) return null;
+  const s=g.started;
+  if(s==null) return null;
+  if(typeof s==="number") return s;
+  if(s.toMillis) return s.toMillis();     // Firestore Timestamp
+  return null;
+}
 function needConfig(){ app.innerHTML =
   `<div style="padding:26px;text-align:center;max-width:420px">
      <div style="font-size:44px">🧨</div>
      <h2 style="color:#ff3344;letter-spacing:3px">CONFIG REQUIRED</h2>
-     <p style="color:#c9b7a5;line-height:1.6">Open <b>index.html</b> and paste your Firebase project config into the
-     <code>firebaseConfig</code> block near the top of the &lt;script&gt; tag, then re-upload.
-     See the README for the exact steps.</p>
+     <p style="color:#c9b7a5;line-height:1.6">Open <b>index.html</b> and paste your <b>Hostage Game</b> Firebase config into the
+     <code>firebaseConfig</code> block near the top of the &lt;script&gt; tag, then re-upload. See the README.</p>
    </div>`; }
 
-/* ============================================================
-   ROUTER
-   ============================================================ */
-if (!role || role === "home") { renderHome(); }
-else if (!CONFIG_OK) { needConfig(); }
-else if (role === "main") { renderMain(); }
-else if (ORDER.includes(role)) { renderWire(role); }
-else { renderHome(); }
+/* ---------- Firestore data access ---------- */
+async function loadTeams(){
+  const qs = await getDocs(collection(db, TEAMS_COLLECTION));
+  const out = [];
+  qs.forEach(d=>{
+    const t = d.data() || {};
+    const pass = t.passcode ?? t.password ?? t.accessCode ?? t.code ?? t.pin ?? "";
+    const name = t.name ?? t.teamName ?? t.title ?? d.id;
+    out.push({ key:d.id, name:String(name), passcode:String(pass), order:(t.order ?? null) });
+  });
+  out.sort((a,b)=>{
+    if(a.order!=null && b.order!=null) return a.order-b.order;
+    return a.key.localeCompare(b.key);
+  });
+  return out;
+}
+async function fetchTeamName(key){
+  try{ const s=await getDoc(doc(db, TEAMS_COLLECTION, String(key))); const v=s.data(); return (v&&(v.name??v.teamName??v.title))||key; }
+  catch(e){ return key; }
+}
+async function fetchOwnerPass(){
+  // owner passcode stored at config/owner {passcode}
+  try{ const s=await getDoc(doc(db,"config","owner")); const v=s.data(); return v ? String(v.passcode ?? v.code ?? "") : null; }
+  catch(e){ return null; }
+}
 
-/* ============================================================
-   MAIN PHONE
-   ============================================================ */
+/* ============================================================ ROUTER ============================================================ */
+if (role === "owner")            { CONFIG_OK ? renderOwner() : needConfig(); }
+else if (!role || role==="home") { CONFIG_OK ? renderHome()  : needConfig(); }
+else if (!CONFIG_OK)             { needConfig(); }
+else if (role === "main")        { renderMain(); }
+else if (ORDER.includes(role))   { renderWire(role); }
+else                             { renderHome(); }
+
+/* ============================================================ MAIN PHONE ============================================================ */
 function renderMain(){
   const wires = ORDER.map(w=>`<div class="w" style="background:${HEX[w]};box-shadow:0 0 8px ${HEX[w]}"></div>`).join("");
   app.className="";
   app.innerHTML = `
   <div class="scene" id="scene">
     <div class="bricks"></div>
-    <button class="resetbtn" id="reset" title="Organizer reset">⟳</button>
     <div class="hud-top">
-      <span class="badge">Team ${team}</span>
+      <span class="badge" id="teamBadge">…</span>
       <span class="badge" id="stateBadge">● ARMED</span>
     </div>
     <div class="big-clock crit" id="bigClock">05:00</div>
-
     <div class="door"><div class="window"></div></div>
-
     <div class="bomb-wrap">
       <div class="bomb">
         <div class="wires">${wires}</div>
@@ -357,8 +360,6 @@ function renderMain(){
         <div class="timer-display crit" id="bombTimer">05:00</div>
       </div>
     </div>
-
-    <!-- transparent instructions overlay -->
     <div class="instr" id="instr">
       <button class="closebtn" id="closeInstr">✕ CLOSE</button>
       <h2>Arming &amp; Maintenance Parameters</h2>
@@ -379,60 +380,45 @@ function renderMain(){
         <li>The <b>Blue Wire</b> maintains the thermal coolant. Once it is severed, the device's core will begin to overheat rapidly. You will have exactly <b>90 seconds</b> to finish disarming the device before it melts down and explodes.</li>
       </ol>
     </div>
-
     <div class="flash" id="flash"></div>
     <div class="aftermath" id="after">
       <div class="boom">💥</div>
       <h1>FAKE ALARM</h1>
-      <p class="sub">This device was a decoy. Stand down.<br><br>
-        <b>Use the code on the other phones</b> to find your next station.</p>
+      <p class="sub">This device was a decoy. Stand down.<br><br><b>Use the code on the other phones</b> to find your next station.</p>
     </div>
-
-    <div class="tabbar">
-      <div class="tab" id="btnInstr">📋 Instructions</div>
-    </div>
+    <div class="tabbar"><div class="tab" id="btnInstr">📋 Instructions</div></div>
   </div>`;
 
-  // instructions modal
+  fetchTeamName(team).then(n=>{ const el=document.getElementById("teamBadge"); if(el) el.textContent=n; });
   document.getElementById("btnInstr").onclick = ()=>document.getElementById("instr").classList.add("open");
   document.getElementById("closeInstr").onclick = ()=>document.getElementById("instr").classList.remove("open");
 
-  // organizer reset
-  document.getElementById("reset").onclick = async ()=>{
-    if(confirm("Reset the bomb for Team "+team+"? This restarts the 5-minute timer on all phones.")){
-      await remove(ref(db, gamePath));
-      location.reload();
-    }
-  };
+  setTimeout(ensureStarted, 600);
 
-  // start the countdown (only if not already started for this team)
-  setTimeout(ensureStarted, 500);
-
-  // listen to shared game state
   let startAt=null, dur=GAME_MS, exploded=false, lastSec=-1;
-  onValue(ref(db, gamePath), snap=>{
-    const g = snap.val();
-    if(g && g.started){ startAt=g.started; dur=g.dur||GAME_MS; }
-    else { startAt=null; }   // reset by organizer
+  onSnapshot(gameRef(team), snap=>{
+    const g=snap.data();
+    if(g && g.started){ const sm=startMillis(g); if(sm){ startAt=sm; dur=g.dur||GAME_MS; } }
+    else { startAt=null; }   // owner reset
   });
 
   const bigClock=document.getElementById("bigClock");
   const bombTimer=document.getElementById("bombTimer");
-  const badge=document.getElementById("stateBadge");
 
   function tick(){
     if(startAt){
       const rem = startAt + dur - now();
       bigClock.textContent = bombTimer.textContent = fmt(rem);
       const sec = Math.ceil(Math.max(0,rem)/1000);
-      const cls = rem<=30000 ? "crit" : rem<=60000 ? "warn" : "crit";
-      bigClock.className = "big-clock " + (rem<=60000 ? "warn":"") ;
+      bigClock.className = "big-clock " + (rem<=60000 ? "warn":"");
       bombTimer.className = "timer-display " + (rem<=30000?"crit":rem<=60000?"warn":"");
-      bigClock.classList.remove("safe");
-      if(rem<=30000){ bigClock.classList.add("warn"); }
-      // tick sound
       if(rem>0 && sec!==lastSec){ lastSec=sec; beep(rem<=10000?1200:520, 0.04, "square", 0.04); }
       if(rem<=0 && !exploded){ exploded=true; detonate(); }
+    } else {
+      bigClock.textContent = bombTimer.textContent = fmt(GAME_MS);
+      document.getElementById("after").classList.remove("show");
+      document.getElementById("flash").classList.remove("go");
+      exploded=false; lastSec=-1;
     }
     requestAnimationFrame(tick);
   }
@@ -450,43 +436,36 @@ function renderMain(){
 
 async function ensureStarted(){
   try{
-    await runTransaction(ref(db, gamePath), cur=>{
-      if(cur && cur.started) return cur;                 // already running – leave it
-      return { started: now(), dur: GAME_MS, progress: (cur && cur.progress) || 0 };
+    await runTransaction(db, async (tx)=>{
+      const ref=gameRef(team);
+      const s=await tx.get(ref);
+      const d=s.data();
+      if(s.exists() && d && d.started) return;                       // already running
+      tx.set(ref, { started: serverTimestamp(), dur: GAME_MS, progress: (d&&d.progress)||0 });
     });
   }catch(e){ console.warn(e); }
 }
 
-/* ============================================================
-   WIRE PHONES
-   ============================================================ */
+/* ============================================================ WIRE PHONES ============================================================ */
 function renderWire(wire){
   const num = NUMBERS[wire];
   app.className="";
   app.innerHTML = `
   <div class="wire-screen" id="wscreen">
-    <div class="wire-top"><span class="badge">Team ${team}</span><span class="badge" id="wtag">${wire.toUpperCase()} LINE</span></div>
-
+    <div class="wire-top"><span class="badge" id="teamBadge">…</span><span class="badge">${wire.toUpperCase()} LINE</span></div>
     <div id="standby" class="standby">◌ STANDBY ◌<small>awaiting activation from the main device…</small></div>
-
     <div id="active" class="hidden">
       <div class="wire-name">${wire} wire</div>
-      <div class="wire-visual" id="wireHit">
-        <div class="cable" style="--c:${HEX[wire]}"></div>
-        <div class="grip">✂️</div>
-      </div>
+      <div class="wire-visual" id="wireHit"><div class="cable" style="--c:${HEX[wire]}"></div><div class="grip">✂️</div></div>
       <div class="wire-hint">TAP THE WIRE TO <b>CUT</b></div>
     </div>
-
     <div class="toast" id="toast">TRY AGAIN</div>
-
     <div class="lock" id="lock">
       <div class="tri"><span>!</span></div>
       <h2>WRONG SEQUENCE</h2>
       <div class="cd" id="lockcd">20</div>
       <small>SYSTEM LOCKED — STAND BY</small>
     </div>
-
     <div class="numscreen" id="numscreen">
       <div class="ash"></div>
       <div class="lbl">▓ SIGNAL DECRYPTED ▓</div>
@@ -494,6 +473,8 @@ function renderWire(wire){
       <div class="foot">MEMORIZE THIS DIGIT · FIND YOUR STATION</div>
     </div>
   </div>`;
+
+  fetchTeamName(team).then(n=>{ const el=document.getElementById("teamBadge"); if(el) el.textContent=n; });
 
   const elStandby=document.getElementById("standby");
   const elActive =document.getElementById("active");
@@ -507,132 +488,230 @@ function renderWire(wire){
   let lockUntil = parseInt(localStorage.getItem(LKEY) || "0", 10);
   let startAt=null, dur=GAME_MS, exploded=false, busy=false;
 
-  onValue(ref(db, gamePath), snap=>{
-    const g=snap.val();
-    if(g && g.started){ startAt=g.started; dur=g.dur||GAME_MS; }
-    else { startAt=null; exploded=false; elNum.classList.remove("show"); }  // reset by organizer
+  onSnapshot(gameRef(team), snap=>{
+    const g=snap.data();
+    if(g && g.started){ const sm=startMillis(g); if(sm){ startAt=sm; dur=g.dur||GAME_MS; } }
+    else { startAt=null; exploded=false; elNum.classList.remove("show"); }  // owner reset
   });
 
   function isLocked(){ return Date.now() < lockUntil; }
-
   hit.addEventListener("click", onTap);
 
   async function onTap(){
-    if(busy || exploded || isLocked()) return;
-    if(!startAt) return;                 // not armed yet
+    if(busy || exploded || isLocked() || !startAt) return;
     busy=true;
     try{
       let outcome="";
-      await runTransaction(ref(db, gamePath+"/progress"), cur=>{
-        cur = (typeof cur==="number") ? cur : 0;
+      await runTransaction(db, async (tx)=>{
+        const ref=gameRef(team);
+        const s=await tx.get(ref);
+        if(!s.exists()){ outcome="wrong"; return; }
+        const d=s.data()||{};
+        const cur = (typeof d.progress==="number") ? d.progress : 0;
         const expected = ORDER[cur];
-        if(wire === expected){ outcome="correct"; let n=cur+1; if(n>=ORDER.length) n=0; return n; }
-        outcome="wrong"; return;         // abort write, no state change
+        if(wire === expected){ outcome="correct"; let n=cur+1; if(n>=ORDER.length) n=0; tx.update(ref,{progress:n}); }
+        else { outcome="wrong"; }   // no write → progress unchanged
       });
       if(outcome==="correct"){ showToast(); beep(660,0.05,"triangle",0.05); }
-      else { startLock(); }
+      else if(outcome==="wrong"){ startLock(); }
     }catch(e){ console.warn(e); }
     busy=false;
   }
-
   function showToast(){ elToast.classList.remove("show"); void elToast.offsetWidth; elToast.classList.add("show"); }
-
   function startLock(){
     lockUntil = Date.now() + 20000;
     localStorage.setItem(LKEY, String(lockUntil));
     beep(120,0.4,"sawtooth",0.08);
     if(navigator.vibrate) navigator.vibrate([400,120,400]);
   }
-
   function tick(){
-    const armed = !!startAt;
-    const rem = armed ? (startAt + dur - now()) : null;
-
+    const armed=!!startAt;
+    const rem=armed?(startAt+dur-now()):null;
     if(armed && rem<=0){
-      // EXPLODED → reveal number
       if(!exploded){ exploded=true; if(navigator.vibrate) navigator.vibrate([200,60,300]); boom(); }
-      elNum.classList.add("show");
-      elLock.classList.remove("show");
+      elNum.classList.add("show"); elLock.classList.remove("show");
       requestAnimationFrame(tick); return;
     }
-
-    // pre-explosion states
     elStandby.classList.toggle("hidden", armed);
     elActive.classList.toggle("hidden", !armed);
-
-    if(isLocked()){
-      elLock.classList.add("show");
-      elLockCd.textContent = Math.ceil((lockUntil-Date.now())/1000);
-    } else {
-      elLock.classList.remove("show");
-    }
+    if(isLocked()){ elLock.classList.add("show"); elLockCd.textContent=Math.ceil((lockUntil-Date.now())/1000); }
+    else{ elLock.classList.remove("show"); }
     requestAnimationFrame(tick);
   }
   tick();
 }
 
-/* ============================================================
-   HOME / ORGANIZER SCREEN  (link + QR generator)
-   ============================================================ */
+/* ============================================================ HOME / TEAM SELECT ============================================================ */
 function renderHome(){
   app.className="";
-  const base = location.origin + location.pathname;
-  const roles = [
-    {r:"main",   label:"MAIN PHONE (bomb + timer)", color:"#ff8c1a"},
-    {r:"white",  label:"WIRE — WHITE",  color:HEX.white},
-    {r:"blue",   label:"WIRE — BLUE",   color:HEX.blue},
-    {r:"green",  label:"WIRE — GREEN",  color:HEX.green},
-    {r:"yellow", label:"WIRE — YELLOW", color:HEX.yellow},
-    {r:"red",    label:"WIRE — RED",    color:HEX.red},
-  ];
-  const warn = CONFIG_OK ? "" :
-    `<div class="warnbox">⚠️ <b>Firebase not configured yet.</b> These links will open, but phones won't sync until you paste your Firebase config into <b>index.html</b> (see README, Step 2).</div>`;
-
-  let teamsHtml="";
-  for(let t=1;t<=4;t++){
-    let rows="";
-    roles.forEach(o=>{
-      const url = `${base}?role=${o.r}&team=${t}`;
-      const id = `qr_${t}_${o.r}`;
-      rows += `
-      <div class="linkrow">
-        <div class="qr" id="${id}"></div>
-        <div class="linkmeta">
-          <div class="role"><span class="dot" style="color:${o.color};background:${o.color}"></span>${o.label}</div>
-          <a href="${url}" target="_blank">${url}</a>
-        </div>
-        <button class="copybtn" data-url="${url}">Copy</button>
-      </div>`;
-    });
-    teamsHtml += `<div class="teamcard"><h2>▣ TEAM ${t}</h2>${rows}</div>`;
-  }
-
   app.innerHTML = `
-  <div class="home">
+  <div class="launch">
     <h1>🧨 OPERATION: BLACKOUT</h1>
-    <div class="lead">Organizer console. Each team uses <b>6 phones</b>: 1 main device (bomb + timer) and 5 wire devices.
-      Have each phone scan its QR code or open its link. Opening a team's <b>main</b> link starts that team's 5-minute countdown.</div>
-    ${warn}
-    ${teamsHtml}
-    <div class="foot">Right sequence: WHITE → BLUE → GREEN → YELLOW → RED · Codes after blast: W5 · B6 · G1 · Y3 · R9</div>
+    <div class="lead">Select your team, then enter your passcode.</div>
+    <div id="teamgrid" class="teamgrid">
+      <div class="tiny" style="grid-column:1/-1;text-align:center;padding:30px">Loading teams…</div>
+    </div>
+    <div class="foot">Organizer? Open the <b>owner</b> link (…/index.html?role=owner) to reset teams.</div>
   </div>`;
 
-  // build QR codes
-  if(window.QRCode){
-    for(let t=1;t<=4;t++){
-      roles.forEach(o=>{
-        const url = `${base}?role=${o.r}&team=${t}`;
-        const box = document.getElementById(`qr_${t}_${o.r}`);
-        try{ new QRCode(box, {text:url, width:76, height:76, colorDark:"#000", colorLight:"#fff", correctLevel:QRCode.CorrectLevel.M}); }catch(e){}
-      });
+  loadTeams().then(teams=>{
+    const grid=document.getElementById("teamgrid");
+    if(!teams.length){
+      grid.innerHTML=`<div class="warnbox" style="grid-column:1/-1">No teams found in Firestore. Add a <b>${esc(TEAMS_COLLECTION)}</b> collection where each document has a <b>name</b> and <b>passcode</b> (see README).</div>`;
+      return;
     }
+    grid.innerHTML="";
+    teams.slice(0,4).forEach(t=>{
+      const b=document.createElement("button");
+      b.className="teambtn";
+      b.innerHTML=`<span class="ico">🎯</span><span>${esc(t.name)}</span>`;
+      b.onclick=()=>askPasscode(t);
+      grid.appendChild(b);
+    });
+  }).catch(e=>{
+    document.getElementById("teamgrid").innerHTML=`<div class="warnbox" style="grid-column:1/-1">Couldn't read teams from Firestore. Check your config &amp; security rules (see README).</div>`;
+  });
+}
+
+function askPasscode(t){
+  const ov=document.createElement("div"); ov.className="passwrap";
+  ov.innerHTML=`
+    <div class="passcard">
+      <div class="passtitle">${esc(t.name)}</div>
+      <div class="passsub">Enter team passcode</div>
+      <input id="passin" class="passin" inputmode="numeric" autocomplete="off" placeholder="••••" />
+      <div id="passerr" class="passerr"></div>
+      <div class="passbtns">
+        <button id="passcancel" class="passbtn ghost">Cancel</button>
+        <button id="passok" class="passbtn go">Unlock</button>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+  const inp=ov.querySelector("#passin"); setTimeout(()=>inp.focus(),50);
+  const submit=()=>{
+    const ok = t.passcode!=="" && String(inp.value).trim()===String(t.passcode).trim();
+    if(ok){ ov.remove(); renderTeamConsole(t); }
+    else{
+      ov.querySelector("#passerr").textContent="✖ Wrong passcode — try again";
+      const card=ov.querySelector(".passcard"); card.classList.add("shakeit");
+      setTimeout(()=>card.classList.remove("shakeit"),500);
+      if(navigator.vibrate) navigator.vibrate(200);
+      inp.value=""; inp.focus();
+    }
+  };
+  ov.querySelector("#passok").onclick=submit;
+  ov.querySelector("#passcancel").onclick=()=>ov.remove();
+  inp.addEventListener("keydown",e=>{ if(e.key==="Enter") submit(); });
+}
+
+function renderTeamConsole(t){
+  app.className="";
+  const base=location.origin+location.pathname;
+  let rows="";
+  ROLES.forEach(o=>{
+    const url=`${base}?role=${o.r}&team=${encodeURIComponent(t.key)}`;
+    const id=`qr_${o.r}`;
+    rows+=`
+    <div class="linkrow">
+      <div class="qr" id="${id}"></div>
+      <div class="linkmeta">
+        <div class="role"><span class="dot" style="color:${o.color};background:${o.color}"></span>${o.label}</div>
+        <a href="${url}" target="_blank">${url}</a>
+      </div>
+      <button class="copybtn" data-url="${esc(url)}">Copy</button>
+    </div>`;
+  });
+  app.innerHTML=`
+  <div class="home">
+    <button class="backbtn" id="back">‹ TEAMS</button>
+    <h1>▣ ${esc(t.name)}</h1>
+    <div class="lead">Hand each of this team's 6 phones its link or QR code. Opening the <b>MAIN</b> link starts this team's own 5-minute timer — other teams are unaffected.</div>
+    ${rows}
+    <div class="foot">Sequence: WHITE → BLUE → GREEN → YELLOW → RED · Codes after blast: W5 · B6 · G1 · Y3 · R9</div>
+  </div>`;
+  document.getElementById("back").onclick=renderHome;
+  if(window.QRCode){
+    ROLES.forEach(o=>{
+      const url=`${base}?role=${o.r}&team=${encodeURIComponent(t.key)}`;
+      const box=document.getElementById(`qr_${o.r}`);
+      try{ new QRCode(box,{text:url,width:80,height:80,colorDark:"#000",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.M}); }catch(e){}
+    });
   }
-  // copy buttons
   app.querySelectorAll(".copybtn").forEach(b=>{
     b.onclick=()=>{ const u=b.getAttribute("data-url");
-      navigator.clipboard?.writeText(u).then(()=>{ b.textContent="Copied!"; setTimeout(()=>b.textContent="Copy",1200); })
-      .catch(()=>{ prompt("Copy this link:", u); }); };
+      navigator.clipboard?.writeText(u).then(()=>{ b.textContent="Copied!"; setTimeout(()=>b.textContent="Copy",1200);} )
+      .catch(()=>prompt("Copy this link:",u)); };
   });
+}
+
+/* ============================================================ OWNER CONTROL ============================================================ */
+async function renderOwner(){
+  app.className="";
+  app.innerHTML=`<div class="home"><h1>🛠 OWNER CONTROL</h1><div class="tiny" style="padding:20px">Loading…</div></div>`;
+  let opass=null, teams=[];
+  try{ opass=await fetchOwnerPass(); }catch(e){}
+  try{ teams=await loadTeams(); }catch(e){}
+  const show=()=>ownerPanel(teams);
+  if(opass) ownerGate(String(opass), show); else show();
+}
+
+function ownerGate(code, cb){
+  const ov=document.createElement("div"); ov.className="passwrap";
+  ov.innerHTML=`
+    <div class="passcard">
+      <div class="passtitle">🛠 OWNER</div>
+      <div class="passsub">Enter owner passcode</div>
+      <input id="op" class="passin" inputmode="numeric" autocomplete="off" placeholder="••••" />
+      <div id="oe" class="passerr"></div>
+      <div class="passbtns"><button id="ok" class="passbtn go">Unlock</button></div>
+    </div>`;
+  document.body.appendChild(ov);
+  const inp=ov.querySelector("#op"); setTimeout(()=>inp.focus(),50);
+  const go=()=>{ if(String(inp.value).trim()===String(code).trim()){ ov.remove(); cb(); }
+    else{ ov.querySelector("#oe").textContent="✖ Wrong passcode"; inp.value=""; inp.focus(); } };
+  ov.querySelector("#ok").onclick=go;
+  inp.addEventListener("keydown",e=>{ if(e.key==="Enter") go(); });
+}
+
+function ownerPanel(teams){
+  app.className="";
+  app.innerHTML=`
+  <div class="home">
+    <h1>🛠 OWNER CONTROL</h1>
+    <div class="lead">Reset a single team, or reset everything. Resetting clears that team's 5-minute countdown and cut-progress on all of its phones instantly.</div>
+    <div id="ownlist"></div>
+    <button id="resetall" class="dangerbtn">💥 RESET ALL TEAMS</button>
+    <div id="owntoast" class="tiny" style="text-align:center;margin-top:16px;min-height:16px"></div>
+    <div class="foot">Only reachable at the owner link — players never see this screen.</div>
+  </div>`;
+  const list=document.getElementById("ownlist");
+  const toast=(m)=>{ const el=document.getElementById("owntoast"); el.textContent=m; };
+  if(!teams.length){
+    list.innerHTML=`<div class="warnbox">No teams found. Add a <b>${esc(TEAMS_COLLECTION)}</b> collection in Firestore (see README).</div>`;
+  } else {
+    teams.forEach(t=>{
+      const row=document.createElement("div"); row.className="ownrow";
+      row.innerHTML=`<span class="ownname">▣ ${esc(t.name)}</span>`;
+      const btn=document.createElement("button"); btn.className="copybtn"; btn.textContent="Reset";
+      btn.onclick=async()=>{
+        if(confirm(`Reset "${t.name}"? This restarts its timer and clears its progress.`)){
+          try{ await deleteDoc(gameRef(t.key)); toast(`✔ "${t.name}" reset`); }
+          catch(e){ toast("✖ Reset failed — check rules"); }
+        }
+      };
+      row.appendChild(btn); list.appendChild(row);
+    });
+  }
+  document.getElementById("resetall").onclick=async()=>{
+    if(confirm("Reset ALL teams? This wipes every team's timer and progress.")){
+      try{
+        const qs=await getDocs(collection(db, GAMES_COLLECTION));
+        const jobs=[]; qs.forEach(d=>jobs.push(deleteDoc(d.ref)));
+        await Promise.all(jobs);
+        toast("✔ All teams reset");
+      }catch(e){ toast("✖ Reset failed — check rules"); }
+    }
+  };
 }
 </script>
 </body>
