@@ -139,6 +139,19 @@ body::after{
 .numscreen .foot{margin-top:14px;color:#8a7f74;font-size:12px;letter-spacing:4px;animation:pulse 2s infinite;}
 .numscreen .ash{position:absolute;inset:0;pointer-events:none;opacity:.15;background:repeating-linear-gradient(115deg,transparent 0 6px,#000 6px 7px);}
 
+/* ===== ENTRY GATE ===== */
+.gate{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 22px;text-align:center;}
+.gate .glyph{font-size:54px;filter:drop-shadow(0 0 16px rgba(255,60,60,.5));margin-bottom:8px;animation:flicker 4s infinite;}
+.gate h1{color:#ff2233;letter-spacing:5px;font-size:22px;margin:2px 0 22px;text-shadow:0 0 16px rgba(255,34,51,.6);}
+.gate .riddle{color:#d9cfc4;font-size:16px;line-height:1.7;letter-spacing:1px;max-width:360px;margin-bottom:22px;font-style:italic;text-shadow:0 0 8px #000;}
+.gate .gatein{width:100%;max-width:320px;background:#0a0606;border:2px solid #5a1a1a;border-radius:12px;color:#fff;
+  text-align:center;font-size:24px;letter-spacing:8px;padding:14px;font-family:inherit;outline:none;}
+.gate .gatein:focus{border-color:#ff3344;box-shadow:0 0 16px rgba(255,51,68,.5);}
+.gate .gateerr{color:#ff5a5a;font-size:13px;letter-spacing:1px;min-height:18px;margin-top:12px;}
+.gate .gatebtn{width:100%;max-width:320px;margin-top:8px;padding:15px;border-radius:12px;border:1px solid #7a1a1a;
+  background:linear-gradient(180deg,#7a1414,#4a0d0d);color:#fff;font-weight:bold;letter-spacing:3px;font-size:15px;text-transform:uppercase;box-shadow:0 5px 0 #300;}
+.gate .gatebtn:active{transform:translateY(2px);box-shadow:0 3px 0 #300;}
+
 /* ===== LAUNCH / TEAM SELECT ===== */
 .launch{flex:1;overflow:auto;padding:26px 18px 50px;display:flex;flex-direction:column;}
 .launch h1{color:#ff2233;letter-spacing:4px;font-size:24px;margin:6px 0 2px;text-align:center;text-shadow:0 0 16px rgba(255,34,51,.6);}
@@ -222,6 +235,11 @@ const firebaseConfig = {
    ============================================================ */
 const TEAMS_COLLECTION = "teams";     // <- your Firestore collection of teams
 const GAMES_COLLECTION = "games";     // <- created automatically for live game state
+
+/* ============================================================
+   3)  ENTRY GATE — the code players must type on the first screen
+   ============================================================ */
+const ENTRY_CODE = "11117839";
 /* ============================================================ */
 
 const CONFIG_OK = firebaseConfig.apiKey && !String(firebaseConfig.apiKey).includes("PASTE");
@@ -325,18 +343,51 @@ async function fetchTeamName(key){
   catch(e){ return key; }
 }
 async function fetchOwnerPass(){
-  // owner passcode stored at config/owner {passcode}
   try{ const s=await getDoc(doc(db,"config","owner")); const v=s.data(); return v ? String(v.passcode ?? v.code ?? "") : null; }
   catch(e){ return null; }
 }
 
 /* ============================================================ ROUTER ============================================================ */
 if (role === "owner")            { CONFIG_OK ? renderOwner() : needConfig(); }
-else if (!role || role==="home") { CONFIG_OK ? renderHome()  : needConfig(); }
+else if (!role || role==="home") { CONFIG_OK ? renderGate() : needConfig(); }
 else if (!CONFIG_OK)             { needConfig(); }
 else if (role === "main")        { renderMain(); }
 else if (ORDER.includes(role))   { renderWire(role); }
-else                             { renderHome(); }
+else                             { renderGate(); }
+
+/* ============================================================ ENTRY GATE ============================================================ */
+function renderGate(){
+  // if already unlocked in this browser session, skip straight to teams
+  if (sessionStorage.getItem("gate_ok") === "1") { renderHome(); return; }
+  app.className="";
+  app.innerHTML = `
+  <div class="gate">
+    <div class="glyph">🕰️</div>
+    <h1>OPERATION: BLACKOUT</h1>
+    <div class="riddle">Keep the watch hidden when the secret birds fly past, Enter the code here</div>
+    <input id="gatein" class="gatein" inputmode="numeric" autocomplete="off" placeholder="••••••••" />
+    <div id="gateerr" class="gateerr"></div>
+    <button id="gatebtn" class="gatebtn">Enter</button>
+  </div>`;
+  const inp=document.getElementById("gatein");
+  const err=document.getElementById("gateerr");
+  setTimeout(()=>inp.focus(),60);
+  const submit=()=>{
+    if(String(inp.value).trim()===ENTRY_CODE){
+      sessionStorage.setItem("gate_ok","1");
+      beep(660,0.06,"triangle",0.05);
+      renderHome();
+    } else {
+      err.textContent="✖ Incorrect code";
+      const g=document.querySelector(".gate"); g.classList.add("shakeit");
+      setTimeout(()=>g.classList.remove("shakeit"),500);
+      if(navigator.vibrate) navigator.vibrate(200);
+      inp.value=""; inp.focus();
+    }
+  };
+  document.getElementById("gatebtn").onclick=submit;
+  inp.addEventListener("keydown",e=>{ if(e.key==="Enter") submit(); });
+}
 
 /* ============================================================ MAIN PHONE ============================================================ */
 function renderMain(){
